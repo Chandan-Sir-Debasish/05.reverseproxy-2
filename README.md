@@ -10,16 +10,16 @@ The following diagram illustrates the routing mechanism, upstream configurations
 
 ```mermaid
 graph TD
-    Client([🌐 Client / Browser]) -->|HTTP Port 80| Nginx[🔒 Nginx API Gateway]
+    Client["🌐 Client / Browser"] -->|HTTP Port 80| Nginx["🔒 Nginx API Gateway"]
 
-    subgraph Docker Bridge Network: backend-network
-        Nginx -->|/api/node/* <br> least_conn| NodeUpstream[Node.js Upstream]
-        Nginx -->|/api/python/* <br> rate limit: 10r/s| PythonBackend[🐍 backend-python:5000]
-        Nginx -->|/api/java/*| JavaBackend[☕ backend-java:8080]
+    subgraph Network ["Docker Bridge Network: backend-network"]
+        Nginx -->|/api/node/* - least_conn| NodeUpstream["Node.js Upstream"]
+        Nginx -->|/api/python/* - rate limit 10r/s| PythonBackend["🐍 backend-python:5000"]
+        Nginx -->|/api/java/*| JavaBackend["☕ backend-java:8080"]
 
-        subgraph Node.js Cluster (Load Balanced)
-            NodeUpstream -->|Weight: 3| Node1[Node Instance 1 <br> backend-node-1:3000]
-            NodeUpstream -->|Weight: 2| Node2[Node Instance 2 <br> backend-node-2:3001]
+        subgraph NodeCluster ["Node.js Cluster (Load Balanced)"]
+            NodeUpstream -->|Weight 3| Node1["Node Instance 1 (backend-node-1:3000)"]
+            NodeUpstream -->|Weight 2| Node2["Node Instance 2 (backend-node-2:3001)"]
         end
     end
 
