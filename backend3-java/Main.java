@@ -9,22 +9,21 @@ import java.time.Instant;
 public class Main {
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
-        
+
         server.createContext("/", new RootHandler());
         server.createContext("/orders", new OrdersHandler());
-        
+
         server.setExecutor(null);
         server.start();
         System.out.println("Java backend running on port 8080");
     }
-    
+
     static class RootHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             String response = String.format(
-                "{\"service\":\"Java Backend\",\"version\":\"1.0.0\",\"timestamp\":\"%s\"}",
-                Instant.now().toString()
-            );
+                    "{\"service\":\"Java Backend\",\"version\":\"1.0.0\",\"timestamp\":\"%s\"}",
+                    Instant.now().toString());
             exchange.getResponseHeaders().set("Content-Type", "application/json");
             exchange.sendResponseHeaders(200, response.length());
             OutputStream os = exchange.getResponseBody();
@@ -32,7 +31,7 @@ public class Main {
             os.close();
         }
     }
-    
+
     static class OrdersHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {

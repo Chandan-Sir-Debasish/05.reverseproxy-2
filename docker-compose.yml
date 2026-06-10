@@ -1,6 +1,7 @@
 services:
   nginx-reverse-proxy:
-    image: nginx:alpine
+    build: ./nginx
+    image: js55998/nginx-reverse-proxy
     container_name: reverse-proxy
     ports:
       - "80:80"
@@ -9,22 +10,24 @@ services:
     networks:
       - backend-network
     depends_on:
-      - backend-node
-      - backend-node2
+      - backend-node-1
+      - backend-node-2
       - backend-python
       - backend-java
 
-  backend-node:
+  backend-node-1:
     build: ./backend1-node
-    container_name: node-backend
+    image: js55998/node-backend
+    container_name: node-backend-1
     environment:
       - PORT=3000
     networks:
       - backend-network
 
-  backend-node2:
+  backend-node-2:
     build: ./backend1-node
-    container_name: node-backend2
+    image: js55998/node-backend
+    container_name: node-backend-2
     environment:
       - PORT=3001
     networks:
@@ -32,12 +35,14 @@ services:
 
   backend-python:
     build: ./backend2-python
+    image: js55998/python-backend
     container_name: python-backend
     networks:
       - backend-network
 
   backend-java:
     build: ./backend3-java
+    image: js55998/java-backend
     container_name: java-backend
     networks:
       - backend-network
